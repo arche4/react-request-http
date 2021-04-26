@@ -1,16 +1,48 @@
-import React from "react";
-import TarjetaFotografia from "./componentes/TarjetaFotografia";
-import ListaFruta from "./componentes/ListaFruta";
-import Graficas from "./componentes/Graficas";
-import Formularios from "./componentes/Formularios";
+import React, { Component } from 'react'
 
-const App = () => (
-  <div>
-    <Formularios />
-    <ListaFruta />
-    <TarjetaFotografia />
-    <Graficas />
-  </div>
-);
+class App extends Component {
+  state = {
+    movie: {}
+  }
 
-export default App;
+  handleSubmit = (event) => {
+    event.preventDefault()
+    const title = event.target[0].value
+    const url = 'http://www.omdbapi.com/?i=tt3896198&apikey=1b5ea528'
+    fetch(url + '&t=' + title)
+      .then(res => res.json())
+      .then(movie => this.setState({ movie }))
+  }
+
+  render () {
+    const { movie } = this.state
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type="text"
+            placeholder='Nombre de Pelicula'
+          />
+          <button>
+            Buscar
+          </button>
+        </form>
+        <div>
+          <h1>{ movie.Title }</h1>
+          <p>
+            { movie.Plot }
+          </p>
+          <img
+            src={ movie.Poster }
+            alt='Poster'
+            style={{
+              width: '150px'
+            }}  
+          />
+        </div>
+      </div>
+    )
+  }
+}
+
+export default App
